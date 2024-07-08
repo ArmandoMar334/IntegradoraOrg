@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, StyleSheet, Text, Dimensions, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
 
 export default function ControlScreen() {
-  // Datos de ejemplo para las ondas cerebrales
-  const brainWaveData = {
+  const [brainWaveData, setBrainWaveData] = useState({
     labels: ["1s", "2s", "3s", "4s", "5s", "6s"],
     datasets: [
       {
@@ -15,20 +14,55 @@ export default function ControlScreen() {
       }
     ],
     legend: ["Ondas cerebrales"]
-  };
+  });
+
+  // Función para simular actualización de datos cada cierto intervalo
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Generar datos aleatorios para las ondas cerebrales
+      const newData = Array.from({ length: 6 }, () => Math.floor(Math.random() * 100));
+      const newLabels = ["1s", "2s", "3s", "4s", "5s", "6s"];
+
+      setBrainWaveData({
+        labels: newLabels,
+        datasets: [
+          {
+            data: newData,
+            color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // color de la línea
+            strokeWidth: 2, // grosor de la línea
+          }
+        ],
+        legend: ["Ondas cerebrales"]
+      });
+    }, 1000); // Actualiza cada 1 segundo
+
+    return () => clearInterval(interval); // Limpiar intervalo en el desmontaje
+  }, []);
+
+  // Memoizar el componente LineChart para evitar re-renderizaciones innecesarias
+  const MemoizedLineChart = useMemo(() => React.memo(() => (
+    <LineChart
+      data={brainWaveData}
+      width={Dimensions.get('window').width * 0.8} // 80% del ancho de la pantalla
+      height={200} // Altura del gráfico ajustada
+      chartConfig={chartConfig}
+      bezier
+      style={styles.graph}
+    />
+  )), [brainWaveData]);
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Control Panel</Text>
+      <Text style={styles.header}>Panel de Control</Text>
       
       <View style={styles.buttonRow}>
         <FontAwesome.Button
           name="arrow-up"
           backgroundColor="#3b5998"
-          onPress={() => console.log('Move Up')}
+          onPress={() => console.log('Mover Arriba')}
           style={styles.button}
         >
-          Up
+          Arriba
         </FontAwesome.Button>
       </View>
 
@@ -36,26 +70,26 @@ export default function ControlScreen() {
         <FontAwesome.Button
           name="arrow-left"
           backgroundColor="#3b5998"
-          onPress={() => console.log('Move Left')}
+          onPress={() => console.log('Mover Izquierda')}
           style={styles.button}
         >
-          Left
+          Izquierda
         </FontAwesome.Button>
         <FontAwesome.Button
           name="stop"
           backgroundColor="#d9534f"
-          onPress={() => console.log('Stop')}
+          onPress={() => console.log('Detener')}
           style={styles.button}
         >
-          Stop
+          Detener
         </FontAwesome.Button>
         <FontAwesome.Button
           name="arrow-right"
           backgroundColor="#3b5998"
-          onPress={() => console.log('Move Right')}
+          onPress={() => console.log('Mover Derecha')}
           style={styles.button}
         >
-          Right
+          Derecha
         </FontAwesome.Button>
       </View>
 
@@ -63,23 +97,16 @@ export default function ControlScreen() {
         <FontAwesome.Button
           name="arrow-down"
           backgroundColor="#3b5998"
-          onPress={() => console.log('Move Down')}
+          onPress={() => console.log('Mover Abajo')}
           style={styles.button}
         >
-          Down
+          Abajo
         </FontAwesome.Button>
       </View>
 
       <Text style={styles.graphHeader}>Ondas Cerebrales</Text>
       <View style={styles.graphContainer}>
-        <LineChart
-          data={brainWaveData}
-          width={Dimensions.get('window').width * 0.8} // 80% del ancho de la pantalla
-          height={200} // Altura del gráfico ajustada
-          chartConfig={chartConfig}
-          bezier
-          style={styles.graph}
-        />
+        <MemoizedLineChart />
       </View>
     </ScrollView>
   );
