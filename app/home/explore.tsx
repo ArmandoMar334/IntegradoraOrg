@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { getGPSData } from '../../scripts/GPSData';
+// La función arroja un array con la siguiente estructura
+// gpsData = [latitud,longitud,fecha, velocidad, hora]
+// para emplear cada valor usar gpsData[1], gpsData[2] etc...
 
+(async () => {
+     try {
+         const gpsData = await getGPSData();
+         // Use the returned data
+         console.log(`GPS Data Array: ${JSON.stringify(gpsData)}`);
+     } catch (error) {
+         console.error('Error:', error);
+     }
+ })();
+ 
 const mapStyles = {
   width: "100%",
   height: "500px"
