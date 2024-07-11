@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, Dimensions, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { LineChart } from 'react-native-chart-kit';
 import { movement } from '../../scripts/moveCar';
 
 export default function ControlScreen() {
@@ -17,21 +16,30 @@ export default function ControlScreen() {
   //   ],
   //   legend: ["Ondas cerebrales"]
   // };
+  const [isRunning, setIsRunning] = useState(false);
+
+  const handlePress = () => {
+    const newRunningState = !isRunning;
+    setIsRunning(newRunningState);
+    console.log('Button state:', newRunningState ? 'OFF' : 'ON');
+  };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Control Panel</Text>
-      
-      <View style={styles.buttonRow}>
+    <View style={styles.container}>
+      <Text style={styles.header}>Panel de Control</Text>
+      <Text style={styles.text}> Controla el dispositivo a traves de los siguientes botones</Text>
+      <View style={styles.buttonRowUpDown}>
         <FontAwesome.Button
           name="arrow-up"
           backgroundColor="#3b5998"
+          borderRadius={55}
+          size={40}
           onLongPress={() => movement(true,"UP")}
           onPressOut={() => movement(false,"UP")}
           // onPress={() => console.log('Move Up')}
           style={styles.button}
         >
-          Up
+          
         </FontAwesome.Button>
       </View>
 
@@ -39,41 +47,50 @@ export default function ControlScreen() {
         <FontAwesome.Button
           name="arrow-left"
           backgroundColor="#3b5998"
+          borderRadius={55}
+          size={40}
           onLongPress={() => movement(true,"LEFT")}
           onPressOut={() => movement(false,"LEFT")}
           style={styles.button}
         >
-          Left
+        
         </FontAwesome.Button>
+
         <FontAwesome.Button
-          name="stop"
-          backgroundColor="#d9534f"
-          onPress={() => console.log('Stop')}
-          style={styles.button}
-        >
-          Stop
-        </FontAwesome.Button>
+         name={isRunning ? "play" : "stop"}
+         backgroundColor={isRunning ? "#5cb85c" : "#d9534f"}
+         size={20}
+         onPress={handlePress}
+         style={styles.button}
+       >
+         {isRunning ? "ON" : "OFF"}
+       </FontAwesome.Button>
+
         <FontAwesome.Button
           name="arrow-right"
           backgroundColor="#3b5998"
+          borderRadius={55}
+          size={40}
           onLongPress={() => movement(true,"RIGHT")}
           onPressOut={() => movement(false,"RIGHT")}
           style={styles.button}
         >
-          Right
+          
         </FontAwesome.Button>
       </View>
-
-      <View style={styles.buttonRow}>
+      
+      <View style={styles.buttonRowUpDown}>
         <FontAwesome.Button
           name="arrow-down"
           backgroundColor="#3b5998"
+          borderRadius={55}
+          size={40}
           onLongPress={() => movement(true,"DOWN")}
           onPressOut={() => movement(false,"DOWN")}
           // onPress={() => console.log('Move Down')}
           style={styles.button}
         >
-          Down
+          
         </FontAwesome.Button>
       </View>
 
@@ -88,53 +105,76 @@ export default function ControlScreen() {
           style={styles.graph}
         />
       </View> */}
-    </ScrollView>
+    </View>
   );
 }
 
-const chartConfig = {
-  backgroundGradientFrom: "#ffffff",
-  backgroundGradientTo: "#ffffff",
-  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-  style: {
-    borderRadius: 16,
-  },
-  propsForDots: {
-    r: "6",
-    strokeWidth: "2",
-    stroke: "#ffa726"
-  }
-};
+// const chartConfig = {
+//   backgroundGradientFrom: "#ffffff",
+//   backgroundGradientTo: "#ffffff",
+//   color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+//   labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+//   style: {
+//     borderRadius: 16,
+//   },
+//   propsForDots: {
+//     r: "6",
+//     strokeWidth: "2",
+//     stroke: "#ffa726"
+//   }
+// };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
   },
   header: {
     fontSize: 24,
     textAlign: 'center',
     marginVertical: 20,
   },
+  buttonRowUpDown: {
+    flexDirection: 'row', 
+    paddingHorizontal: 10,
+    marginHorizontal: 15,
+    marginBottom: 10, 
+  },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 10,
+    marginVertical: 15,
+    marginHorizontal: 15,
+    marginBottom: 15,    
+    justifyContent: 'space-between',
+    width: '100%',
   },
   button: {
-    marginHorizontal: 10,
+    paddingHorizontal: 10,
+    marginHorizontal: 15,
+    width: 75,
+    height: 95,
+    shadowColor: '#fff',
+    shadowOpacity: 0.9,
+    justifyContent: 'center',
   },
-  graphHeader: {
-    fontSize: 20,
+  text: {
+    fontSize: 16,
     textAlign: 'center',
-    marginVertical: 20,
+    marginBottom: 16,
   },
-  graphContainer: {
-    alignItems: 'center', // Centrar el gráfico horizontalmente
-  },
-  graph: {
-    marginVertical: 8,
-    borderRadius: 16,
-  },
+  // graphHeader: {
+  //   fontSize: 20,
+  //   textAlign: 'center',
+  //   marginVertical: 20,
+  // },
+  // graphContainer: {
+  //   alignItems: 'center', // Centrar el gráfico horizontalmente
+  // },
+  // graph: {
+  //   marginVertical: 8,
+  //   borderRadius: 16,
+  // },
 });
