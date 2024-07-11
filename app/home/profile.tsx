@@ -34,7 +34,7 @@ const ProfileScreen = () => {
   if (!user) {
     return (
       <View style={styles.container}>
-        <Text>No user data found</Text>
+        <Text>No se encontro ningun usuario</Text>
       </View>
     );
   }
