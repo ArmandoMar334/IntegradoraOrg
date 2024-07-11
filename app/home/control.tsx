@@ -5,18 +5,18 @@ import { LineChart } from 'react-native-chart-kit';
 import { movement } from '../../scripts/moveCar';
 
 export default function ControlScreen() {
-  // Datos de ejemplo para las ondas cerebrales
-  const brainWaveData = {
-    labels: ["1s", "2s", "3s", "4s", "5s", "6s"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43],
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // color de la línea
-        strokeWidth: 2, // grosor de la línea
-      }
-    ],
-    legend: ["Ondas cerebrales"]
-  };
+  // // Datos de ejemplo para las ondas cerebrales
+  // const brainWaveData = {
+  //   labels: ["1s", "2s", "3s", "4s", "5s", "6s"],
+  //   datasets: [
+  //     {
+  //       data: [20, 45, 28, 80, 99, 43],
+  //       color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // color de la línea
+  //       strokeWidth: 2, // grosor de la línea
+  //     }
+  //   ],
+  //   legend: ["Ondas cerebrales"]
+  // };
 
   return (
     <ScrollView style={styles.container}>
@@ -77,7 +77,7 @@ export default function ControlScreen() {
         </FontAwesome.Button>
       </View>
 
-      <Text style={styles.graphHeader}>Ondas Cerebrales</Text>
+      {/* <Text style={styles.graphHeader}>Ondas Cerebrales</Text>
       <View style={styles.graphContainer}>
         <LineChart
           data={brainWaveData}
@@ -87,7 +87,7 @@ export default function ControlScreen() {
           bezier
           style={styles.graph}
         />
-      </View>
+      </View> */}
     </ScrollView>
   );
 }
