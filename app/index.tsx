@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { View, Button, TextInput, StyleSheet, Text, Modal, Pressable} from 'react-native';
-import { auth} from '../firebase';
+import { View, TextInput, StyleSheet, Text, Modal, Pressable, Image } from 'react-native';
+import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import Swal from 'sweetalert2';
+
 
 export default function IndexScreen() {
   const [email, setEmail] = useState('');
@@ -49,77 +49,94 @@ export default function IndexScreen() {
       console.error('Error signing up:', error);
       setErrorForm(error.message || 'Error signing up'); // Asegurarse de que 'message' exista
     }
-    Swal.fire({
-      position: "center-end",
-      icon: "success",
-      title: "Registro Exitoso",
-      showConfirmButton: false,
-      timer: 1500
-    });
   };
 
-  return (    
-      <View style={styles.container}>
-        <Text style={styles.header}>Login</Text>
-        <Text style={styles.textcontainer}>Registrate o Inicia sesión</Text>
-        {error && <Text style={styles.error}>{error}</Text>}
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoFocus={true}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <Button title="Login" onPress={handleLogin} />
-        <Text style={styles.separator}></Text>
-        <Button title="Registrate" onPress={() => setModalVisible(true)} />
+  return (
+    <View style={styles.container}>
+      <Image
+        style={styles.loginIcon}
+        source={require('@/assets/images/Yel.png')}
+      />
+      <Text style={styles.header}>Login</Text>
+      <Text style={styles.textcontainer}>Registrate o Inicia sesión</Text>
+      {error && <Text style={styles.error}>{error}</Text>}
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        textContentType="emailAddress"
+        autoFocus={true}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <FontAwesome.Button
+        name="user"
+        onPress={handleLogin}
+        style={styles.button}>
+        Inicia Sesión
+      </FontAwesome.Button>
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Pressable onPress={() => setModalVisible(false)}>
-                <Ionicons name="close" style={styles.closeModal} size={28} />
-              </Pressable>
-              <Text style={styles.header}>Registro</Text>
+      <Text style={styles.separator}></Text>
 
-              {errorForm && <Text style={styles.error}>{errorForm}</Text>}
-              <TextInput
-                style={styles.input}
-                placeholder="Nombre"
-                value={nameForm}
-                onChangeText={setNameForm}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={emailForm}
-                onChangeText={setEmailForm}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={passwordForm}
-                onChangeText={setPasswordForm}
-                secureTextEntry
-              />
-              <Button title="Sign Up" onPress={handleSignUp} />
-            </View>
+      <FontAwesome.Button
+        name="user-plus"
+        backgroundColor="#d9534f"
+        onPress={() => setModalVisible(true)}
+        style={styles.button}>
+        Registrate
+      </FontAwesome.Button>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Pressable onPress={() => setModalVisible(false)}>
+              <Ionicons name="close" style={styles.closeModal} size={28} />
+            </Pressable>
+            <Text style={styles.header}>Registro</Text>
+
+            {errorForm && <Text style={styles.error}>{errorForm}</Text>}
+            <TextInput
+              style={styles.input}
+              placeholder="Nombre"
+              value={nameForm}
+              onChangeText={setNameForm}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="E-mail"
+              value={emailForm}
+              onChangeText={setEmailForm}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              value={passwordForm}
+              onChangeText={setPasswordForm}
+              secureTextEntry
+            />
+            <Text style={styles.separator}></Text>
+            <FontAwesome.Button
+              name="user-plus"
+              backgroundColor="#008FFF"
+              onPress={handleSignUp}
+              style={styles.button}>
+              Registrate
+            </FontAwesome.Button>
           </View>
-        </Modal>
-      </View>
+        </View>
+      </Modal>
+    </View>
   );
 }
 
@@ -127,8 +144,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 10,
-    paddingTop: 10,
+    alignItems: 'center',
+    padding: 30,
+    paddingTop: 30,
     backgroundColor: '#fff',
   },
   header: {
@@ -140,10 +158,11 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '##154360',
     borderWidth: 1,
     marginBottom: 10,
-    paddingHorizontal: 8,
+    paddingHorizontal: 5,    
+    fontWeight: 'bold'
   },
   textcontainer: {
     textAlign: 'center',
@@ -153,7 +172,6 @@ const styles = StyleSheet.create({
   textModal: {
     color: '#FFFFFF',
     marginBottom: 20,
-    fontWeight: 'bold'
   },
   error: {
     color: 'red',
@@ -166,10 +184,10 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
+    margin: 15,
+    backgroundColor: '#C3EBFC',
+    borderRadius: 25,
+    padding: 45,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -195,11 +213,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   loginIcon: {
-    color: "black",
-    position: "absolute",
-    top: 230,
-    left: 120,
-    zIndex: 1000,
+    width: 250,
+    height: 150,
+    marginBottom: 10,
+    resizeMode: 'contain',
   },
+  button: {
+    marginHorizontal: 30,
+  }
 });
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

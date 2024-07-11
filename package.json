@@ -48,7 +48,8 @@
     "react-native-screens": "^3.31.1",
     "react-native-svg": "^15.3.0",
     "react-native-web": "~0.19.10",
-    "sweetalert2": "^11.12.0"
+    "sweetalert2": "^11.12.0",
+    "expo-image": "~1.12.12"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
