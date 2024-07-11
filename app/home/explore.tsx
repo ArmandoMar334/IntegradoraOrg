@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { getGPSData } from '../../scripts/GPSData';
+
+
+(async () => {
+    try {
+        const gpsData = await getGPSData();
+        // Use the returned data
+        console.log(`GPS Data Array: ${JSON.stringify(gpsData)}`);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+})();
 
 const mapStyles = {
   width: "100%",
