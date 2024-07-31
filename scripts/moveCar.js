@@ -1,31 +1,28 @@
 import axios from 'axios';
 
-const PROXY_URL = 'http://localhost:3000/api';
 const CLIENT_ID = 'vbp7UQ6MJVoQQMClqaMJjlOSfCqGAErS';
 const CLIENT_SECRET = 'i5AbtdXktpvoETUmDdusTc5b3hknccM66M2fv9aGxeikkk3ZJuBQOOgHA7bT82Fw';
-const AUDIENCE = 'https://api2.arduino.cc/iot';
-const API_BASE_URL = '/iot/v2/things/a69b9f59-4fec-4123-beef-ba978f9f8a54/properties/';
+const API_BASE_URL = 'https://api2.arduino.cc/iot';
+const THINGS_ID = 'a69b9f59-4fec-4123-beef-ba978f9f8a54';
 
 async function getToken() {
-    const url = '/iot/v1/clients/token';
     const data = new URLSearchParams({
         grant_type: 'client_credentials',
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
-        audience: AUDIENCE
-    }).toString();
-
-    const config = {
-        method: 'post',
-        url: PROXY_URL + url,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        data: data
-    };
+        audience: 'https://api2.arduino.cc/iot'
+    });
 
     try {
-        const response = await axios(config);
+        const response = await axios.post(
+            `${API_BASE_URL}/v1/clients/token`,
+            data,
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }
+        );
         console.log("Token obtenido correctamente: " + response.data['access_token']);
         return response.data['access_token'];
     } catch (error) {
@@ -36,12 +33,8 @@ async function getToken() {
 
 async function movement(energize, direction) {
     const token = await getToken();
-    if (!token) {
-        return;
-    }
 
     let pid = "";
-
     switch (direction) {
         case "UP":
             pid = "02f5934b-ac88-44bf-a98c-4bcc4264bf66"; // Forward
@@ -60,10 +53,16 @@ async function movement(energize, direction) {
             return;
     }
 
+    if (!pid) {
+        console.error("Invalid PID");
+        alert("Invalid PID, exiting...");
+        return
+    }
+
     const propertyValue = { value: energize };
 
     try {
-        const response = await axios.put(PROXY_URL + API_BASE_URL + pid + '/publish', propertyValue, {
+        const response = await axios.put(`${API_BASE_URL}/v2/things/${THINGS_ID}/properties/${pid}/publish`, propertyValue, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
