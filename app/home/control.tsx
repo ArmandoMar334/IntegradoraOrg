@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { movement } from '../../scripts/moveCar';
+import { movement, useController } from '../../scripts/moveCar';
 
 export default function ControlScreen() {
   const [isRunning, setIsRunning] = useState(false);
@@ -10,6 +10,7 @@ export default function ControlScreen() {
     const newRunningState = !isRunning;
     setIsRunning(newRunningState);
     console.log('Button state:', newRunningState ? 'OFF' : 'ON');
+    newRunningState ? useController(false) : useController(true);
   };
 
   
