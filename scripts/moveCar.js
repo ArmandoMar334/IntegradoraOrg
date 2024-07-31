@@ -26,7 +26,7 @@ async function getToken() {
 
     try {
         const response = await axios(config);
-        console.log("Token obtenido correctamente: " + response.data['access_token']);
+        // console.log("Token obtenido correctamente: " + response.data['access_token']);
         return response.data['access_token'];
     } catch (error) {
         console.error("Failed getting an access token: " + error);
@@ -79,4 +79,30 @@ async function movement(energize, direction) {
     }
 }
 
-export { movement };
+async function useController(use) {
+    const token = await getToken();
+    if (!token) {
+        return;
+    }
+
+    let pid = "77e53dcf-fb67-4a9f-8d0f-d9e8532e3ad9";
+    const propertyValue = { value: use };
+
+    try {
+        const response = await axios.put(PROXY_URL + API_BASE_URL + pid + '/publish', propertyValue, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+        console.log('API called successfully.', response.data);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        } else {
+            console.error('An unknown error occurred');
+        }
+    }
+}
+
+export { movement, useController };
