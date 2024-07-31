@@ -11,6 +11,7 @@ export default function ControlScreen() {
     setIsRunning(newRunningState);
     console.log('Button state:', newRunningState ? 'OFF' : 'ON');
   };
+
   
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +33,7 @@ export default function ControlScreen() {
         <FontAwesome.Button
           name="arrow-left"
           backgroundColor="#3b5998"
+
           onLongPress={() => movement(true, "LEFT")}
           onPressOut={() => movement(false, "LEFT")}
           style={styles.button}
@@ -81,8 +83,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 20,
   },
+  buttonRowUpDown: {
+    flexDirection: 'row', 
+    paddingHorizontal: 10,
+    marginHorizontal: 15,
+    marginBottom: 10, 
+  },
   buttonRow: {
     flexDirection: 'row',
+
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 15,
@@ -104,4 +113,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
+  // graphHeader: {
+  //   fontSize: 20,
+  //   textAlign: 'center',
+  //   marginVertical: 20,
+  // },
+  // graphContainer: {
+  //   alignItems: 'center', // Centrar el gráfico horizontalmente
+  // },
+  // graph: {
+  //   marginVertical: 8,
+  //   borderRadius: 16,
+  // },
 });
