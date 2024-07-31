@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const CLIENT_ID = 'vbp7UQ6MJVoQQMClqaMJjlOSfCqGAErS';
 const CLIENT_SECRET = 'i5AbtdXktpvoETUmDdusTc5b3hknccM66M2fv9aGxeikkk3ZJuBQOOgHA7bT82Fw';
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = 'http://159.223.182.187:3000/api';
 const THINGS_ID = 'a69b9f59-4fec-4123-beef-ba978f9f8a54';
 
 async function getToken() {
