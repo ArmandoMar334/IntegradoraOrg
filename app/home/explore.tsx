@@ -2,17 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { getGPSData } from '../../scripts/GPSData';
 
-
-(async () => {
-    try {
-        const gpsData = await getGPSData();
-        // Use the returned data
-        console.log(`GPS Data Array: ${JSON.stringify(gpsData)}`);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-})();
-
 const mapStyles = {
   width: "100%",
   height: "500px"
@@ -29,31 +18,20 @@ export default function GPSScreen() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    const requestLocationPermission = async () => {
+    const fetchGPSData = async () => {
       try {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            setLatitude(position.coords.latitude);
-            setLongitude(position.coords.longitude);
-            setErrorMsg(null);
-          },
-          (error) => {
-            setErrorMsg(error.message);
-            console.log(error);
-          },
-          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-        );
-      } catch (err) {
-        if (err instanceof Error) {
-          setErrorMsg(err.message);
-        } else {
-          setErrorMsg('An unknown error occurred');
+        const gpsData = await getGPSData();
+        if (gpsData) {
+          setLatitude(parseFloat(gpsData[0]));
+          setLongitude(parseFloat(gpsData[1]));
         }
-        console.warn(err);
+      } catch (error) {
+        setErrorMsg('Error fetching GPS data');
+        console.error(error);
       }
     };
 
-    requestLocationPermission();
+    fetchGPSData();
   }, []);
 
   return (

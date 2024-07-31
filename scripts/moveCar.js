@@ -1,69 +1,82 @@
-var ArduinoIotClient = require('@arduino/arduino-iot-client');
-var defaultClient = ArduinoIotClient.ApiClient.instance;
-const axios = require("axios").default
+import axios from 'axios';
+
+const PROXY_URL = 'http://localhost:3000/api';
+const CLIENT_ID = 'vbp7UQ6MJVoQQMClqaMJjlOSfCqGAErS';
+const CLIENT_SECRET = 'i5AbtdXktpvoETUmDdusTc5b3hknccM66M2fv9aGxeikkk3ZJuBQOOgHA7bT82Fw';
+const AUDIENCE = 'https://api2.arduino.cc/iot';
+const API_BASE_URL = '/iot/v2/things/a69b9f59-4fec-4123-beef-ba978f9f8a54/properties/';
 
 async function getToken() {
-    var url = 'https://api2.arduino.cc/iot/v1/clients/token';
-    var data = new URLSearchParams({
+    const url = '/iot/v1/clients/token';
+    const data = new URLSearchParams({
         grant_type: 'client_credentials',
-        client_id: 'vbp7UQ6MJVoQQMClqaMJjlOSfCqGAErS',
-        client_secret: 'i5AbtdXktpvoETUmDdusTc5b3hknccM66M2fv9aGxeikkk3ZJuBQOOgHA7bT82Fw',
-        audience: 'https://api2.arduino.cc/iot'
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        audience: AUDIENCE
     }).toString();
 
-    var config = {
+    const config = {
         method: 'post',
-        url: url,
-        headers: { 
-            'Content-Type': 'application/x-www-form-urlencoded'
+        url: PROXY_URL + url,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
         },
-        data : data
+        data: data
     };
 
     try {
         const response = await axios(config);
-        // console.log(response.data['access_token'])
+        console.log("Token obtenido correctamente: " + response.data['access_token']);
         return response.data['access_token'];
-    }
-    catch (error) {
+    } catch (error) {
         console.error("Failed getting an access token: " + error);
+        return null;
     }
 }
 
-async function movement(energize,direction) {
-    // Configure OAuth2 access token for authorization: oauth2
-    defaultClient.defaultHeaders={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'POST, GET, OPTIONS, PUT'};
-    var oauth2 = defaultClient.authentications['oauth2'];
-    oauth2.accessToken = await getToken();
+async function movement(energize, direction) {
+    const token = await getToken();
+    if (!token) {
+        return;
+    }
 
-    // Create an instance of the API class
-    var api = new ArduinoIotClient.PropertiesV2Api()
-    var id = "a69b9f59-4fec-4123-beef-ba978f9f8a54"; // {String} The id of the thing
-    var pid = "";
+    let pid = "";
 
     switch (direction) {
         case "UP":
-            pid = "02f5934b-ac88-44bf-a98c-4bcc4264bf66"; // {String} The id of the property Forward
+            pid = "02f5934b-ac88-44bf-a98c-4bcc4264bf66"; // Forward
             break;
         case "LEFT":
-            pid = "a5343249-e782-4e94-a196-1d5154ec6342"; // {String} The id of the property Left
+            pid = "a5343249-e782-4e94-a196-1d5154ec6342"; // Left
             break;
         case "DOWN":
-            pid = "cb03085b-3424-4610-aabe-d6b8565e6a0b"; // {String} The id of the property Down
+            pid = "cb03085b-3424-4610-aabe-d6b8565e6a0b"; // Down
             break;
         case "RIGHT":
-            pid = "383ff582-a3e2-48b1-90b5-3eabff680a22"; // {String} The id of the property Right
+            pid = "383ff582-a3e2-48b1-90b5-3eabff680a22"; // Right
             break;
+        default:
+            console.error("Invalid direction");
+            return;
     }
-    var propertyValue = { value: energize}; // {PropertyValue} 
-    // var opts = {
-    // 'xOrganization': '11231' // {String} The id of the organization
-    // };
-    api.propertiesV2Publish(id, pid, propertyValue).then(function() {
-    console.log('API called successfully.');
-    }, function(error) {
-    console.error(error);
-    });
+
+    const propertyValue = { value: energize };
+
+    try {
+        const response = await axios.put(PROXY_URL + API_BASE_URL + pid + '/publish', propertyValue, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+        console.log('API called successfully.', response.data);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        } else {
+            console.error('An unknown error occurred');
+        }
+    }
 }
 
-module.exports = { movement };
+export { movement };

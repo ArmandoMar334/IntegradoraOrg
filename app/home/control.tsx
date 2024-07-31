@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Dimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { movement } from '../../scripts/moveCar';
 
 export default function ControlScreen() {
-  // // Datos de ejemplo para las ondas cerebrales
-  // const brainWaveData = {
-  //   labels: ["1s", "2s", "3s", "4s", "5s", "6s"],
-  //   datasets: [
-  //     {
-  //       data: [20, 45, 28, 80, 99, 43],
-  //       color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // color de la línea
-  //       strokeWidth: 2, // grosor de la línea
-  //     }
-  //   ],
-  //   legend: ["Ondas cerebrales"]
-  // };
   const [isRunning, setIsRunning] = useState(false);
 
   const handlePress = () => {
@@ -24,105 +12,63 @@ export default function ControlScreen() {
     console.log('Button state:', newRunningState ? 'OFF' : 'ON');
   };
 
+  
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [tokenMessage, setTokenMessage] = useState<string | null>(null);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Panel de Control</Text>
-      <Text style={styles.text}> Controla el dispositivo a traves de los siguientes botones</Text>
-      <View style={styles.buttonRowUpDown}>
+      <Text style={styles.header}>Control Panel</Text>
+      <View style={styles.buttonRow}>
         <FontAwesome.Button
           name="arrow-up"
           backgroundColor="#3b5998"
-          borderRadius={55}
-          size={40}
-          onLongPress={() => movement(true,"UP")}
-          onPressOut={() => movement(false,"UP")}
-          // onPress={() => console.log('Move Up')}
+          onLongPress={() => movement(true, "UP")}
+          onPressOut={() => movement(false, "UP")}
           style={styles.button}
-        >
-          
-        </FontAwesome.Button>
+        />
       </View>
-
       <View style={styles.buttonRow}>
         <FontAwesome.Button
           name="arrow-left"
           backgroundColor="#3b5998"
-          borderRadius={55}
-          size={40}
-          onLongPress={() => movement(true,"LEFT")}
-          onPressOut={() => movement(false,"LEFT")}
+
+          onLongPress={() => movement(true, "LEFT")}
+          onPressOut={() => movement(false, "LEFT")}
+          style={styles.button}
+        />
+        <FontAwesome.Button
+          name={isRunning ? "play" : "stop"}
+          backgroundColor={isRunning ? "#5cb85c" : "#d9534f"}
+          size={20}
+          onPress={handlePress}
           style={styles.button}
         >
-        
+          {isRunning ? "ON" : "OFF"}
         </FontAwesome.Button>
-
-        <FontAwesome.Button
-         name={isRunning ? "play" : "stop"}
-         backgroundColor={isRunning ? "#5cb85c" : "#d9534f"}
-         size={20}
-         onPress={handlePress}
-         style={styles.button}
-       >
-         {isRunning ? "ON" : "OFF"}
-       </FontAwesome.Button>
-
         <FontAwesome.Button
           name="arrow-right"
           backgroundColor="#3b5998"
-          borderRadius={55}
-          size={40}
-          onLongPress={() => movement(true,"RIGHT")}
-          onPressOut={() => movement(false,"RIGHT")}
+          onLongPress={() => movement(true, "RIGHT")}
+          onPressOut={() => movement(false, "RIGHT")}
           style={styles.button}
-        >
-          
-        </FontAwesome.Button>
+        />
       </View>
-      
-      <View style={styles.buttonRowUpDown}>
+      <View style={styles.buttonRow}>
         <FontAwesome.Button
           name="arrow-down"
           backgroundColor="#3b5998"
-          borderRadius={55}
-          size={40}
-          onLongPress={() => movement(true,"DOWN")}
-          onPressOut={() => movement(false,"DOWN")}
-          // onPress={() => console.log('Move Down')}
+          onLongPress={() => movement(true, "DOWN")}
+          onPressOut={() => movement(false, "DOWN")}
           style={styles.button}
-        >
-          
-        </FontAwesome.Button>
-      </View>
-
-      {/* <Text style={styles.graphHeader}>Ondas Cerebrales</Text>
-      <View style={styles.graphContainer}>
-        <LineChart
-          data={brainWaveData}
-          width={Dimensions.get('window').width * 0.8} // 80% del ancho de la pantalla
-          height={200} // Altura del gráfico ajustada
-          chartConfig={chartConfig}
-          bezier
-          style={styles.graph}
         />
-      </View> */}
+      </View>
+      {tokenMessage && <Text style={styles.tokenMessage}>{tokenMessage}</Text>}
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 }
-
-// const chartConfig = {
-//   backgroundGradientFrom: "#ffffff",
-//   backgroundGradientTo: "#ffffff",
-//   color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-//   labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-//   style: {
-//     borderRadius: 16,
-//   },
-//   propsForDots: {
-//     r: "6",
-//     strokeWidth: "2",
-//     stroke: "#ffa726"
-//   }
-// };
 
 const styles = StyleSheet.create({
   container: {
@@ -145,25 +91,27 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
+
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: 15,
-    marginHorizontal: 15,
-    marginBottom: 15,    
-    justifyContent: 'space-between',
-    width: '100%',
   },
   button: {
-    paddingHorizontal: 10,
     marginHorizontal: 15,
     width: 75,
-    height: 95,
-    shadowColor: '#fff',
-    shadowOpacity: 0.9,
+    height: 75,
     justifyContent: 'center',
+    margin: 10
   },
-  text: {
-    fontSize: 16,
+  tokenMessage: {
+    color: 'green',
     textAlign: 'center',
-    marginBottom: 16,
+    marginTop: 20,
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
   // graphHeader: {
   //   fontSize: 20,
