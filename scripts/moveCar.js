@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const CLIENT_ID = 'vbp7UQ6MJVoQQMClqaMJjlOSfCqGAErS';
 const CLIENT_SECRET = 'i5AbtdXktpvoETUmDdusTc5b3hknccM66M2fv9aGxeikkk3ZJuBQOOgHA7bT82Fw';
-const API_BASE_URL = 'https://api2.arduino.cc/iot';
+const API_BASE_URL = 'http://localhost:3000/api';
 const THINGS_ID = 'a69b9f59-4fec-4123-beef-ba978f9f8a54';
 
 async function getToken() {
@@ -15,16 +15,18 @@ async function getToken() {
 
     try {
         const response = await axios.post(
-            `${API_BASE_URL}/v1/clients/token`,
+            `${API_BASE_URL}/iot/v1/clients/token`,
             data,
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }
         );
-        console.log("Token obtenido correctamente: " + response.data['access_token']);
-        return response.data['access_token'];
+
+        console.log("Token obtenido correctamente: " + ['access_token']);
+        return axios.create({
+            baseURL: API_BASE_URL, // Replace with your base URL
+            headers: {
+                'Authorization': `Bearer ${response.data.access_token}`,
+                'Content-Type': 'application/json',
+            }
+        });
     } catch (error) {
         console.error("Failed getting an access token: " + error);
         return null;
@@ -32,13 +34,8 @@ async function getToken() {
 }
 
 async function movement(energize, direction) {
-    const token = await getToken();
-    if (!token) {
-        return;
-    }
-
+    const authAxios = await getToken();
     let pid = "";
-
     switch (direction) {
         case "UP":
             pid = "02f5934b-ac88-44bf-a98c-4bcc4264bf66"; // Forward
@@ -66,45 +63,23 @@ async function movement(energize, direction) {
     const propertyValue = { value: energize };
 
     try {
-        const response = await axios.put(`${API_BASE_URL}/v2/things/${THINGS_ID}/properties/${pid}/publish`, propertyValue, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            }
-        });
+        const response = await authAxios.put(`/iot/v2/things/${THINGS_ID}/properties/${pid}/publish`, propertyValue);
         console.log('API called successfully.', response.data);
     } catch (error) {
-        if (error instanceof Error) {
-            console.error(error.message);
-        } else {
-            console.error('An unknown error occurred');
-        }
+        console.error(error);
     }
 }
 
 async function useController(use) {
-    const token = await getToken();
-    if (!token) {
-        return;
-    }
-
+    const authAxios = await getToken();
     let pid = "77e53dcf-fb67-4a9f-8d0f-d9e8532e3ad9";
     const propertyValue = { value: use };
 
     try {
-        const response = await axios.put(PROXY_URL + API_BASE_URL + pid + '/publish', propertyValue, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            }
-        });
+        const response = await authAxios.put(`/iot/v2/things/${THINGS_ID}/properties/${pid}/publish`, propertyValue);
         console.log('API called successfully.', response.data);
     } catch (error) {
-        if (error instanceof Error) {
-            console.error(error.message);
-        } else {
-            console.error('An unknown error occurred');
-        }
+        console.error(error);
     }
 }
 

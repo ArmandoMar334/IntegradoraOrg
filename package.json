@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "start-proxy": "node ./my-proxy-server/server.js",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -50,7 +51,6 @@
     "react-native-screens": "^3.31.1",
     "react-native-svg": "^15.3.0",
     "react-native-web": "~0.19.10",
-
     "request": "^2.88.2",
     "sweetalert2": "^11.12.0"
   },
