@@ -20,46 +20,58 @@ export default function ControlScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Control Panel</Text>
+      <Text style={styles.header}>Control Remoto</Text>
       <View style={styles.buttonRow}>
         <FontAwesome.Button
           name="arrow-up"
-          backgroundColor="#3b5998"
+          backgroundColor="#0d5c81"
+          size={35}
           onLongPress={() => movement(true, "UP")}
           onPressOut={() => movement(false, "UP")}
           style={styles.button}
         />
       </View>
+      
       <View style={styles.buttonRow}>
-        <FontAwesome.Button
-          name="arrow-left"
-          backgroundColor="#3b5998"
-
-          onLongPress={() => movement(true, "LEFT")}
-          onPressOut={() => movement(false, "LEFT")}
-          style={styles.button}
-        />
+        <div style={{ marginRight: '15px' }}>
+          <FontAwesome.Button
+            name="arrow-left"
+            backgroundColor="#0d5c81"
+            size={35}
+            onLongPress={() => movement(true, "LEFT")}
+            onPressOut={() => movement(false, "LEFT")}
+            style={styles.button}
+          />
+        </div>
+        
         <FontAwesome.Button
           name={isRunning ? "play" : "stop"}
           backgroundColor={isRunning ? "#5cb85c" : "#d9534f"}
           size={20}
+          borderRadius={155}
           onPress={handlePress}
           style={styles.button}
         >
           {isRunning ? "ON" : "OFF"}
         </FontAwesome.Button>
-        <FontAwesome.Button
-          name="arrow-right"
-          backgroundColor="#3b5998"
-          onLongPress={() => movement(true, "RIGHT")}
-          onPressOut={() => movement(false, "RIGHT")}
-          style={styles.button}
-        />
+
+        <div style={{ marginLeft: '15px'}}>
+          <FontAwesome.Button
+            name="arrow-right"
+            backgroundColor="#0d5c81"
+            size={35}
+            onLongPress={() => movement(true, "RIGHT")}
+            onPressOut={() => movement(false, "RIGHT")}
+            style={styles.button}
+          />
+        </div>
       </View>
+      
       <View style={styles.buttonRow}>
         <FontAwesome.Button
           name="arrow-down"
-          backgroundColor="#3b5998"
+          backgroundColor="#0d5c81"
+          size={35}
           onLongPress={() => movement(true, "DOWN")}
           onPressOut={() => movement(false, "DOWN")}
           style={styles.button}
@@ -74,35 +86,32 @@ export default function ControlScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
   },
   header: {
     fontSize: 24,
     textAlign: 'center',
     marginVertical: 20,
-  },
-  buttonRowUpDown: {
-    flexDirection: 'row', 
-    paddingHorizontal: 10,
-    marginHorizontal: 15,
-    marginBottom: 10, 
+    fontWeight: 'bold',
+    color: '#0d5c81',
   },
   buttonRow: {
     flexDirection: 'row',
-
-    justifyContent: 'center',
-    alignItems: 'center',
     marginVertical: 15,
+    marginHorizontal: 15,
+    marginBottom: 15,    
+    justifyContent: 'space-between'
   },
   button: {
-    marginHorizontal: 15,
-    width: 75,
-    height: 75,
+    paddingHorizontal: 18,
+    marginHorizontal: 10,
+    width: 85,
+    height: 95,
     justifyContent: 'center',
-    margin: 10
+    shadowColor: '#000',
+    padding: 10,  
   },
   tokenMessage: {
     color: 'green',
@@ -114,16 +123,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
-  // graphHeader: {
-  //   fontSize: 20,
-  //   textAlign: 'center',
-  //   marginVertical: 20,
-  // },
-  // graphContainer: {
-  //   alignItems: 'center', // Centrar el gráfico horizontalmente
-  // },
-  // graph: {
-  //   marginVertical: 8,
-  //   borderRadius: 16,
-  // },
 });
