@@ -1,53 +1,47 @@
 // ProfileScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { auth } from '@/firebase';
+import { signOut } from 'firebase/auth';
+import { router } from 'expo-router';
 
-const ProfileScreen = () => {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUserData = () => {
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        setUser({
-          displayName: currentUser.displayName,
-          email: currentUser.email,
-          photoURL: currentUser.photoURL
-        });
-      }
-      setLoading(false);
-    };
-
-    fetchUserData();
-  }, []);
-
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
-
-  if (!user) {
-    return (
-      <View style={styles.container}>
-        <Text>No se encontro ningun usuario...</Text>
-      </View>
-    );
-  }
+const ProfileScreen = () => {  
+  const navigation = useNavigation();
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log('User logged out');
+      // Elimina los datos de sesión si es necesario
+      sessionStorage.removeItem('email');
+      // Redirigir a la página de inicio de sesión
+      router.replace('/'); // Asegúrate de que 'Index' sea el nombre correcto de tu ruta de inicio de sesión
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Image source={require('@/assets/images/usuarios.png')}  style={styles.image}/>      
       <Text style={styles.title}>Usuario</Text>
-      {user.photoURL && (
-        <Image source={{ uri: user.photoURL }} style={styles.avatar} />
-      )}
-      <Text style={styles.label}>Name: {user.displayName}</Text>
-      <Text style={styles.label}>Email: {user.email}</Text>
+     
+      <Text style={styles.label}>{sessionStorage.getItem('email')}</Text>
+
+      <Text style={styles.separator}></Text>
+
+      <FontAwesome.Button
+        name="sign-out"
+        backgroundColor="#d9534f"
+        size={30}
+        onPress= {handleLogout}
+        style={styles.button}>
+        Salir
+      </FontAwesome.Button>
+
+
     </View>
   );
 };
@@ -82,6 +76,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#154360',
   },
+  button: {
+    marginHorizontal: 30,
+  },
+  separator: {
+    height: 35,
+    width: '100%',
+    backgroundColor: '#FFFFF',
+    marginVertical: 5,
+  }
 });
 
 export default ProfileScreen;

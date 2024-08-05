@@ -16,7 +16,6 @@ export default function IndexScreen() {
   //Variables del formulario de registro
   const [emailForm, setEmailForm] = useState('');
   const [passwordForm, setPasswordForm] = useState('');
-  const [nameForm, setNameForm] = useState('');
   const [errorForm, setErrorForm] = useState<string | null>(null);
 
   const handleLogin = async () => {
@@ -25,6 +24,7 @@ export default function IndexScreen() {
       await signInWithEmailAndPassword(auth, email, password);
       console.log('User logged in');
       setError(null); // Limpiar el error si el login es exitoso
+      sessionStorage.setItem('email', email);
       router.replace('/home');
     } catch (error: any) { // Especificar 'any' para el catch
       console.error('Error logging in:', error);
@@ -42,7 +42,6 @@ export default function IndexScreen() {
       setModalVisible(false); // Cerrar el modal al registrarse
       setEmailForm('');
       setPasswordForm('');
-      setNameForm('');
       setErrorForm(null);
 
     } catch (error: any) { // Especificar 'any' para el catch
@@ -60,6 +59,7 @@ export default function IndexScreen() {
       <Text style={styles.header}>Login</Text>
       <Text style={styles.textcontainer}>Registrate o Inicia sesión</Text>
       {error && <Text style={styles.error}>{error}</Text>}
+      
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -106,12 +106,6 @@ export default function IndexScreen() {
             <Text style={styles.header}>Registro</Text>
 
             {errorForm && <Text style={styles.error}>{errorForm}</Text>}
-            <TextInput
-              style={styles.input}
-              placeholder="Nombre"
-              value={nameForm}
-              onChangeText={setNameForm}
-            />
             <TextInput
               style={styles.input}
               placeholder="E-mail"
@@ -185,18 +179,19 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 15,
-    backgroundColor: '#C3EBFC',
+    backgroundColor: '#FFFFFF',
     borderRadius: 25,
     padding: 45,
+    paddingTop: 72,
+    paddingBottom: 55,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 5,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.5,
+    shadowRadius: 15,
   },
   separator: {
     height: 5,

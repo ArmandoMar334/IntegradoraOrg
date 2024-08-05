@@ -8,7 +8,7 @@ import { ThemedView } from '@/components/ThemedView';
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerBackgroundColor={{ light: '#0d5c81', dark: '#0d5c81' }}
       headerImage={
         <Image
           source={require('@/assets/images/Yel.png')}
@@ -18,7 +18,17 @@ export default function HomeScreen() {
       <ThemedView style={styles.contentContainer}>
         <ThemedText type="title" style={styles.title}>¡Bienvenido!</ThemedText>
         <ThemedText style={styles.paragraph}>
-        Bienvenido a nuestro innovador proyecto de carrito a control remoto. Este carrito puede ser controlado mediante ondas cerebrales con una diadema o con el teléfono. Nuestro objetivo es proporcionar una herramienta útil y accesible para ayudar a personas con discapacidades motoras. Esperamos que encuentres este proyecto inspirador y útil. ¡Gracias por unirte a nosotros en esta emocionante aventura tecnológica!
+        <p><strong> Bienvenido a nuestro revolucionario proyecto de control remoto cerebral!</strong></p> 
+        
+        <p>Presentamos un automotor que puedes controlar con la 
+        mente usando una diadema <strong>EEG</strong> o mediante tu teléfono móvil. <br />        
+        Diseñado para transformar la movilidad de personas con discapacidades motoras, 
+        este proyecto no solo es innovador, sino también increíblemente accesible. </p>
+
+        <p>Únete a nosotros en esta emocionante aventura tecnológica y 
+        descubre cómo estamos redefiniendo la independencia y la accesibilidad.</p>
+
+        <p><strong>¡Gracias por ser parte de esta inspiradora revolución!</strong></p>
         </ThemedText>
         <Image
           source={require('@/assets/images/equipo.jpg')}
@@ -37,6 +47,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 16,
+    color: '#0d5c81'
   },
   paragraph: {
     textAlign: 'center',
@@ -48,10 +59,17 @@ const styles = StyleSheet.create({
     height: 250,
   },
   reactLogo: {
-    height: 200,
-    width: 400,
-    bottom: 0,
-    left: 0,
     position: 'absolute',
+    top: 0,
+    width: 400,
+    height: 200,
+    resizeMode: 'contain',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 5,
   },
 });
