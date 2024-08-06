@@ -30,10 +30,30 @@ export default function HomeScreen() {
 
         <p><strong>¡Gracias por ser parte de esta inspiradora revolución!</strong></p>
         </ThemedText>
-        <Image
-          source={require('@/assets/images/equipo.jpg')}
-          style={styles.photo}
-        />
+          <ThemedText>
+            <div style={styles.container}>
+              <Image
+                source={require('@/assets/images/ricardo1.png')}
+                style={styles.photo}
+              />
+              <Image
+                source={require('@/assets/images/armando1.png')}
+                style={styles.photo}
+              />
+            </div>
+          </ThemedText>
+          <ThemedText>
+            <div style={styles.container}>
+              <Image
+                source={require('@/assets/images/luis1.png')}
+                style={styles.photo}
+              />
+              <Image
+                source={require('@/assets/images/alejandra1.png')}
+                style={styles.photo}
+              />
+            </div>
+          </ThemedText>
       </ThemedView>
     </ParallaxScrollView>
   );
@@ -54,9 +74,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontSize: 16,
   },
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
   photo: {
-    width: 250,
-    height: 250,
+    maxHeight: 350,
+    maxWidth: 300,
+    margin: 10,    
+    alignContent: 'center',
+    alignItems: 'center',
+
   },
   reactLogo: {
     position: 'absolute',
